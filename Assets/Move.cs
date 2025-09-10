@@ -38,3 +38,4 @@ public class Move : MonoBehaviour
         rb.linearVelocity = new Vector2(horizontalInput * speed, rb.linearVelocity.y);
     }
 }
+// teste

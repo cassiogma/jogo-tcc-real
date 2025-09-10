@@ -1,66 +1,113 @@
+﻿// PortaControler.cs
 using UnityEngine;
 using System.Collections;
 
-public class portas_controler : MonoBehaviour
+[RequireComponent(typeof(Collider2D))]
+public class PortaControler : MonoBehaviour
 {
-    public Transform destination;     // destino do teleporte
+    [Header("Teleporte")]
+    public Transform destino;
+
+    [Tooltip("Se usar fade, o teleporte acontece no breu. Se não, usa o delayTeleport abaixo.")]
+    public bool usarFade = true;
+    public float fadeOutDur = 0.35f;
+    public float fadeHold = 0.05f;
+    public float fadeInDur = 0.35f;
+
+    [Tooltip("Usado APENAS se 'usarFade' = false")]
+    public float delayTeleport = 1.5f;
+
+    [Header("Configuração da Porta")]
+    public string chaveNecessaria = "ChavePorta1"; // vazio = porta livre
+
     private GameObject player;
     private bool playerPerto = false;
+    private bool emUso = false;
     private Animator anim;
+
+    private void OnValidate()
+    {
+        var col = GetComponent<Collider2D>();
+        if (col && !col.isTrigger) col.isTrigger = true;
+    }
 
     void Awake()
     {
         player = GameObject.FindGameObjectWithTag("Player");
-        if (player == null)
-        {
-            Debug.LogError("Jogador n�o encontrado! Verifique a tag 'Player'.");
-        }
-
         anim = GetComponent<Animator>();
-        if (anim == null)
-        {
-            Debug.LogWarning("Animator n�o encontrado na porta!");
-        }
+        if (player == null) Debug.LogError($"[{name}] Player com Tag 'Player' não encontrado.");
     }
 
     void Update()
     {
-        if (playerPerto && Input.GetKeyDown(KeyCode.E))
-        {
-            Debug.Log("Tecla E pressionada! Abrindo porta...");
+        if (!playerPerto || emUso) return;
 
-            if (anim != null)
+        if (Input.GetKeyDown(KeyCode.E))
+        {
+            bool temChave = string.IsNullOrWhiteSpace(chaveNecessaria) ||
+                            (InventarioPlayer.instance != null && InventarioPlayer.instance.TemChave(chaveNecessaria));
+
+            if (!temChave)
             {
-                anim.SetTrigger("Abrir"); // dispara a anima��o usando Trigger
+                HUDMensagens.instance?.MostrarMensagemPor($"A porta está trancada — precisa da {chaveNecessaria}.", 2f);
+                return;
             }
 
-            // inicia coroutine para teleporte com delay de 2 segundos
-            StartCoroutine(TeleportarComDelay(2f));
+            emUso = true;
+            anim?.SetTrigger("Abrir");
+            HUDMensagens.instance?.LimparMensagem();
+
+            if (usarFade)
+            {
+                // Garante fader
+                var fader = ScreenFader.instance ?? new GameObject("ScreenFader").AddComponent<ScreenFader>();
+                StartCoroutine(AbrirComFade(fader));
+            }
+            else
+            {
+                StartCoroutine(TeleportarComDelay(delayTeleport));
+            }
         }
+    }
+
+    private IEnumerator AbrirComFade(ScreenFader fader)
+    {
+        yield return fader.FadeOutIn(fadeOutDur, fadeHold, fadeInDur, () =>
+        {
+            if (player != null && destino != null)
+                player.transform.position = destino.position;
+        });
+        emUso = false;
     }
 
     private IEnumerator TeleportarComDelay(float delay)
     {
-        yield return new WaitForSeconds(delay); // espera 2 segundos
-        player.transform.position = destination.position;
-        Debug.Log("Player teleportado!");
+        if (delay > 0f) yield return new WaitForSeconds(delay);
+        if (player != null && destino != null)
+            player.transform.position = destino.position;
+        emUso = false;
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (collision.CompareTag("Player"))
+        if (!collision.CompareTag("Player")) return;
+
+        playerPerto = true;
+
+        bool temChave = string.IsNullOrWhiteSpace(chaveNecessaria) ||
+                        (InventarioPlayer.instance != null && InventarioPlayer.instance.TemChave(chaveNecessaria));
+
+        if (HUDMensagens.instance != null)
         {
-            Debug.Log("Jogador perto da porta.");
-            playerPerto = true;
+            if (temChave) HUDMensagens.instance.MostrarMensagem("Pressione E para abrir");
+            else HUDMensagens.instance.MostrarMensagem($"Trancada — precisa da {chaveNecessaria}");
         }
     }
 
     private void OnTriggerExit2D(Collider2D collision)
     {
-        if (collision.CompareTag("Player"))
-        {
-            Debug.Log("Jogador saiu da porta.");
-            playerPerto = false;
-        }
+        if (!collision.CompareTag("Player")) return;
+        playerPerto = false;
+        HUDMensagens.instance?.LimparMensagem();
     }
 }
