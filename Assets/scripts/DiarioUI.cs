@@ -48,6 +48,9 @@ public class DiarioUI : MonoBehaviour
 
     private void Update()
     {
+        // Diagnóstico: verifica se Update está rodando e se Q está sendo detectado
+        Debug.Log($"[DiarioUI] Update ativo. Q={Input.GetKeyDown(teclaAbrir)}, TemDiario={DiarioManager.instance?.TemDiario}");
+
         // Detecta Q para abrir/fechar
         if (Input.GetKeyDown(teclaAbrir))
         {
@@ -82,7 +85,19 @@ public class DiarioUI : MonoBehaviour
         {
             ProximaPagina();
         }
+
+        
+    if (Input.anyKeyDown)
+    {
+        if (Input.GetKeyDown(KeyCode.Q))
+        {
+            Debug.Log("[Teste] Q detectado via anyKeyDown.");
+        }
     }
+
+
+    }
+
 
     private void Toggle()
     {
