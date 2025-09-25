@@ -103,13 +103,13 @@
       "url": "https://packages.unity.com"
     },
     "com.unity.cinemachine": {
-      "version": "file:C:/Users/cassio.147216/OneDrive - SATC - Associação Beneficente da Indústria Carbonífera de Santa Catarina/Desktop/com.unity.cinemachine-main/com.unity.cinemachine-main/com.unity.cinemachine",
+      "version": "2.9.7",
       "depth": 0,
-      "source": "local",
+      "source": "registry",
       "dependencies": {
-        "com.unity.splines": "2.0.0",
-        "com.unity.modules.imgui": "1.0.0"
-      }
+        "com.unity.test-framework": "1.1.31"
+      },
+      "url": "https://packages.unity.com"
     },
     "com.unity.collab-proxy": {
       "version": "2.9.1",
@@ -251,13 +251,6 @@
       "dependencies": {},
       "url": "https://packages.unity.com"
     },
-    "com.unity.settings-manager": {
-      "version": "2.0.1",
-      "depth": 2,
-      "source": "registry",
-      "dependencies": {},
-      "url": "https://packages.unity.com"
-    },
     "com.unity.shadergraph": {
       "version": "17.0.3",
       "depth": 1,
@@ -266,17 +259,6 @@
         "com.unity.render-pipelines.core": "17.0.3",
         "com.unity.searcher": "4.9.2"
       }
-    },
-    "com.unity.splines": {
-      "version": "2.6.1",
-      "depth": 1,
-      "source": "registry",
-      "dependencies": {
-        "com.unity.ugui": "1.0.0",
-        "com.unity.mathematics": "1.2.1",
-        "com.unity.settings-manager": "1.0.3"
-      },
-      "url": "https://packages.unity.com"
     },
     "com.unity.test-framework": {
       "version": "1.4.5",

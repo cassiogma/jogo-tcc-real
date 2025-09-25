@@ -1,6 +1,6 @@
 {
   "dependencies": {
-    "com.unity.cinemachine": "file:C:/Users/cassio.147216/OneDrive - SATC - Associação Beneficente da Indústria Carbonífera de Santa Catarina/Desktop/com.unity.cinemachine-main/com.unity.cinemachine-main/com.unity.cinemachine",
+    "com.unity.cinemachine": "2.9.7",
     "com.unity.collab-proxy": "2.9.1",
     "com.unity.feature.2d": "2.0.1",
     "com.unity.ide.rider": "3.0.31",
