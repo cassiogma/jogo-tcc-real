@@ -48,10 +48,8 @@ public class DiarioUI : MonoBehaviour
 
     private void Update()
     {
-        // Diagnóstico: verifica se Update está rodando e se Q está sendo detectado
-        Debug.Log($"[DiarioUI] Update ativo. Q={Input.GetKeyDown(teclaAbrir)}, TemDiario={DiarioManager.instance?.TemDiario}");
 
-        // Detecta Q para abrir/fechar
+    
         if (Input.GetKeyDown(teclaAbrir))
         {
             var dm = DiarioManager.GetOrCreate();
