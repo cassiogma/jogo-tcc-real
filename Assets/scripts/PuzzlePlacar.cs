@@ -9,8 +9,8 @@ public class PuzzlePlacar : MonoBehaviour
     public TMP_InputField placarB;
 
     [Header("Código correto")]
-    public string codigoA = "4";
-    public string codigoB = "0";
+    public string codigoA = "123";
+    public string codigoB = "456";
 
     [Header("UI")]
     public GameObject painelPuzzle;
