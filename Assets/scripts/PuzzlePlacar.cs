@@ -1,4 +1,4 @@
-using UnityEngine;
+﻿using UnityEngine;
 using TMPro;
 using System.Collections.Generic;
 
@@ -8,12 +8,15 @@ public class PuzzlePlacar : MonoBehaviour
     public TMP_InputField placarA;
     public TMP_InputField placarB;
 
-    [Header("C�digo correto")]
+    [Header("Código correto")]
     public string codigoA = "4";
     public string codigoB = "0";
 
     [Header("UI")]
     public GameObject painelPuzzle;
+
+    [Header("Recompensa")]
+    public TextAsset paginaDiario; // ← nova página a ser entregue
 
     public void ValidarPuzzle()
     {
@@ -22,7 +25,7 @@ public class PuzzlePlacar : MonoBehaviour
 
         if (!NumerosSaoUnicos(entradaA) || !NumerosSaoUnicos(entradaB))
         {
-            HUDMensagens.instance?.MostrarMensagemPor("Use n�meros diferentes em cada placar!", 2f);
+            HUDMensagens.instance?.MostrarMensagemPor("Use números diferentes em cada placar!", 2f);
             return;
         }
 
@@ -30,12 +33,22 @@ public class PuzzlePlacar : MonoBehaviour
         {
             HUDMensagens.instance?.MostrarMensagemPor("Puzzle resolvido!", 2f);
             painelPuzzle.SetActive(false);
+
+            // Entrega da página do diário
+            if (paginaDiario != null)
+            {
+                var dm = DiarioManager.GetOrCreate();
+                dm.AdicionarPagina(paginaDiario.text);
+                HUDMensagens.instance?.MostrarMensagemPor("Nova página adicionada ao diário!", 2.5f);
+                Debug.Log($"[PuzzlePlacar] Página adicionada ao diário: {paginaDiario.name}");
+            }
+
             Debug.Log("[PuzzlePlacar] Puzzle resolvido.");
         }
         else
         {
-            HUDMensagens.instance?.MostrarMensagemPor("C�digo incorreto.", 2f);
-            Debug.Log("[PuzzlePlacar] C�digo incorreto.");
+            HUDMensagens.instance?.MostrarMensagemPor("Código incorreto.", 2f);
+            Debug.Log("[PuzzlePlacar] Código incorreto.");
         }
     }
 

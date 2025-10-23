@@ -62636,6 +62636,7 @@ MonoBehaviour:
   codigoA: 4
   codigoB: 0
   painelPuzzle: {fileID: 1000509241}
+  paginaDiario: {fileID: 4900000, guid: 1c532a50149e5ed4195e53e015a3fdaa, type: 3}
 --- !u!1 &1153880931
 GameObject:
   m_ObjectHideFlags: 0
@@ -63670,7 +63671,7 @@ SpriteRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 2
   m_Sprite: {fileID: -1893091238922357814, guid: db5c486cd91a8634d98cd4686307d0cc, type: 3}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Color: {r: 0.7075472, g: 0.7075472, b: 0.7075472, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
