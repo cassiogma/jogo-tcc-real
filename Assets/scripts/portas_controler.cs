@@ -1,5 +1,4 @@
-﻿// PortaControler.cs
-using UnityEngine;
+﻿using UnityEngine;
 using System.Collections;
 
 [RequireComponent(typeof(Collider2D))]
@@ -7,18 +6,19 @@ public class PortaControler : MonoBehaviour
 {
     [Header("Teleporte")]
     public Transform destino;
-
-    [Tooltip("Se usar fade, o teleporte acontece no breu. Se não, usa o delayTeleport abaixo.")]
     public bool usarFade = true;
     public float fadeOutDur = 0.35f;
     public float fadeHold = 0.05f;
     public float fadeInDur = 0.35f;
-
-    [Tooltip("Usado APENAS se 'usarFade' = false")]
     public float delayTeleport = 1.5f;
 
     [Header("Configuração da Porta")]
-    public string chaveNecessaria = "ChavePorta1"; // vazio = porta livre
+    public string chaveNecessaria = "ChavePorta1";
+
+    [Header("Som")]
+    public AudioClip somAbrir;
+    public AudioClip somTrancada;
+    private AudioSource audioSource;
 
     private GameObject player;
     private bool playerPerto = false;
@@ -35,7 +35,10 @@ public class PortaControler : MonoBehaviour
     {
         player = GameObject.FindGameObjectWithTag("Player");
         anim = GetComponent<Animator>();
-        if (player == null) Debug.LogError($"[{name}] Player com Tag 'Player' não encontrado.");
+        audioSource = GetComponent<AudioSource>();
+
+        if (player == null)
+            Debug.LogError($"[{name}] Player com Tag 'Player' não encontrado.");
     }
 
     void Update()
@@ -50,16 +53,25 @@ public class PortaControler : MonoBehaviour
             if (!temChave)
             {
                 HUDMensagens.instance?.MostrarMensagemPor($"A porta está trancada — precisa da {chaveNecessaria}.", 2f);
+
+                // Toca som de porta trancada
+                if (somTrancada != null && audioSource != null)
+                    audioSource.PlayOneShot(somTrancada);
+
                 return;
             }
 
             emUso = true;
             anim?.SetTrigger("Abrir");
+
+            // Toca som de abertura
+            if (somAbrir != null && audioSource != null)
+                audioSource.PlayOneShot(somAbrir);
+
             HUDMensagens.instance?.LimparMensagem();
 
             if (usarFade)
             {
-                // Garante fader
                 var fader = ScreenFader.instance ?? new GameObject("ScreenFader").AddComponent<ScreenFader>();
                 StartCoroutine(AbrirComFade(fader));
             }
@@ -100,7 +112,7 @@ public class PortaControler : MonoBehaviour
         if (HUDMensagens.instance != null)
         {
             if (temChave) HUDMensagens.instance.MostrarMensagem("Pressione E para abrir");
-            else HUDMensagens.instance.MostrarMensagem($"Trancada — precisa da {chaveNecessaria}");
+            else HUDMensagens.instance.MostrarMensagem("Pressione E para abrir");
         }
     }
 

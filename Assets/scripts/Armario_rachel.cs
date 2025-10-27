@@ -62,7 +62,7 @@ public class Armario : MonoBehaviour
 
         if (!chavePega)
         {
-            HUDMensagens.instance?.MostrarMensagem("Pressione E para vasculhar armario");
+            HUDMensagens.instance?.MostrarMensagem("Pressione E para interagir");
         }
     }
 
