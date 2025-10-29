@@ -1,6 +1,8 @@
 using UnityEngine;
 using TMPro;
-using System.Collections.Generic;
+using UnityEngine.SceneManagement;
+using UnityEngine.UI;
+using System.Collections;
 
 public class PuzzleFinal : MonoBehaviour
 {
@@ -12,19 +14,18 @@ public class PuzzleFinal : MonoBehaviour
 
     [Header("UI")]
     public GameObject painelPuzzle;
+    public Image telaFade; // Imagem preta para o fade (alpha inicial = 0)
+    public float duracaoFade = 3f;
 
     [Header("Recompensa")]
     public TextAsset paginaDiario;
 
+    [Header("Cena para carregar")]
+    public string nomeCena; // Nome da cena após resolver o puzzle
+
     public void ValidarSenha()
     {
-        string entrada = campoSenha.text;
-
-        if (!NumerosSaoUnicos(entrada))
-        {
-            HUDMensagens.instance?.MostrarMensagemPor("Use números diferentes!", 2f);
-            return;
-        }
+        string entrada = campoSenha.text.Trim(); // Remove espaços extras
 
         if (entrada == codigoCorreto)
         {
@@ -36,26 +37,33 @@ public class PuzzleFinal : MonoBehaviour
                 var dm = DiarioManager.GetOrCreate();
                 dm.AdicionarPagina(paginaDiario.text);
                 HUDMensagens.instance?.MostrarMensagemPor("Nova página adicionada ao diário!", 2.5f);
-                Debug.Log($"[PuzzleSenhaUnica] Página adicionada ao diário: {paginaDiario.name}");
+                Debug.Log($"[PuzzleFinal] Página adicionada ao diário: {paginaDiario.name}");
             }
 
-            Debug.Log("[PuzzleSenhaUnica] Puzzle resolvido.");
+            Debug.Log("[PuzzleFinal] Puzzle resolvido.");
+            StartCoroutine(FazerFadeETrocarCena());
         }
         else
         {
             HUDMensagens.instance?.MostrarMensagemPor("Código incorreto.", 2f);
-            Debug.Log("[PuzzleSenhaUnica] Código incorreto.");
+            Debug.Log("[PuzzleFinal] Código incorreto.");
         }
     }
 
-    private bool NumerosSaoUnicos(string texto)
+    private IEnumerator FazerFadeETrocarCena()
     {
-        var set = new HashSet<char>();
-        foreach (char c in texto)
+        telaFade.gameObject.SetActive(true); // Ativa a imagem só no momento do fade
+        Color cor = telaFade.color;
+        float tempo = 0f;
+
+        while (tempo < duracaoFade)
         {
-            if (!char.IsDigit(c)) return false;
-            if (!set.Add(c)) return false;
+            tempo += Time.deltaTime;
+            cor.a = Mathf.Lerp(0f, 1f, tempo / duracaoFade);
+            telaFade.color = cor;
+            yield return null;
         }
-        return true;
+
+        SceneManager.LoadScene(nomeCena);
     }
 }
