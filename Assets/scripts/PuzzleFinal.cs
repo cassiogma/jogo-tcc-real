@@ -13,9 +13,8 @@ public class PuzzleFinal : MonoBehaviour
     public string codigoCorreto = "123";
 
     [Header("UI")]
-    public GameObject painelPuzzle;
     public Image telaFade; // Imagem preta para o fade (alpha inicial = 0)
-    public float duracaoFade = 3f;
+    public float duracaoFade = 2f;
 
     [Header("Recompensa")]
     public TextAsset paginaDiario;
@@ -30,7 +29,6 @@ public class PuzzleFinal : MonoBehaviour
         if (entrada == codigoCorreto)
         {
             HUDMensagens.instance?.MostrarMensagemPor("Puzzle resolvido!", 2f);
-            painelPuzzle.SetActive(false);
 
             if (paginaDiario != null)
             {
@@ -64,6 +62,6 @@ public class PuzzleFinal : MonoBehaviour
             yield return null;
         }
 
-        SceneManager.LoadScene(nomeCena);
+        SceneManager.LoadScene(nomeCena); // Troca de cena após o fade
     }
 }
