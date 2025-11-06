@@ -2,14 +2,15 @@ using UnityEngine;
 
 public class Move : MonoBehaviour
 {
-    public float horizontalInput;
+    [SerializeField] private float speed = 7f;
+
+    private float horizontalInput;
     private Rigidbody2D rb;
     private Animator animator;
     private SpriteRenderer spriteRenderer;
 
-    private int moveHash = Animator.StringToHash("run");
-
-    [SerializeField] private int speed = 7;
+    // Hash da animação (mais rápido que usar string)
+    private static readonly int RunHash = Animator.StringToHash("run");
 
     private void Awake()
     {
@@ -18,24 +19,24 @@ public class Move : MonoBehaviour
         spriteRenderer = GetComponent<SpriteRenderer>();
     }
 
-    void Update()
+    private void Update()
     {
-        horizontalInput = Input.GetAxis("Horizontal");
+        // Captura o input de movimento (A/D ou setas)
+        horizontalInput = Input.GetAxisRaw("Horizontal");
 
-        animator.SetBool(moveHash, horizontalInput != 0);
+        // Atualiza animação de corrida
+        animator.SetBool(RunHash, horizontalInput != 0);
 
+        // Inverte o sprite conforme direção
         if (horizontalInput > 0)
-        {
             spriteRenderer.flipX = false;
-        }
         else if (horizontalInput < 0)
-        {
             spriteRenderer.flipX = true;
-        }
     }
+
     private void FixedUpdate()
     {
+        // Unity 6+: usa linearVelocity
         rb.linearVelocity = new Vector2(horizontalInput * speed, rb.linearVelocity.y);
     }
 }
-// teste
