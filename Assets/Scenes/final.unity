@@ -174,7 +174,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
   m_Color: {r: 0, g: 0, b: 0, a: 1}
-  m_RaycastTarget: 1
+  m_RaycastTarget: 0
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
@@ -214,8 +214,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0.0089912, y: -0.000015259}
-  m_SizeDelta: {x: 1100, y: 506}
+  m_AnchoredPosition: {x: 50.004, y: -0.000015259}
+  m_SizeDelta: {x: 1000, y: 506}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &496758191
 GameObject:
@@ -422,7 +422,7 @@ Canvas:
   m_AdditionalShaderChannelsFlag: 0
   m_UpdateRectTransformForStandalone: 0
   m_SortingLayerID: 0
-  m_SortingOrder: 0
+  m_SortingOrder: -1
   m_TargetDisplay: 0
 --- !u!1 &988437911
 GameObject:
@@ -1009,7 +1009,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1917839371}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: dc42784cf147c0c48a680349fa168899, type: 3}
   m_Name: 
@@ -1502,6 +1502,7 @@ GameObject:
   - component: {fileID: 2046719307}
   - component: {fileID: 2046719306}
   - component: {fileID: 2046719305}
+  - component: {fileID: 2046719310}
   m_Layer: 5
   m_Name: Button
   m_TagString: Untagged
@@ -1574,7 +1575,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 2046719307}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 2046719310}
+        m_TargetAssemblyTypeName: BotaoTrocaCenaComFade, Assembly-CSharp
+        m_MethodName: TrocarCenaComFade
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &2046719307
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1633,6 +1646,21 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: -139}
   m_SizeDelta: {x: 160, y: 30}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &2046719310
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2046719304}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ccfb6712ff81f92458b328b0772c1a5c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  nomeCena: menu
+  telaFade: {fileID: 26132085}
+  duracaoFade: 3
 --- !u!1 &2143642947
 GameObject:
   m_ObjectHideFlags: 0

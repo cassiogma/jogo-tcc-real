@@ -2,24 +2,25 @@
 using System.Collections;
 
 [RequireComponent(typeof(Collider2D))]
-public class PortaControler : MonoBehaviour
+public class PortaTeleporte : MonoBehaviour
 {
     [Header("Teleporte")]
-    public Transform destino;
+    public Transform destino; // Porta destino
     public bool usarFade = true;
     public float fadeOutDur = 0.35f;
     public float fadeHold = 0.05f;
     public float fadeInDur = 0.35f;
-    public float delayTeleport = 1.5f;
+    public float cooldown = 1f; // Tempo para permitir novo teleporte
+    public Vector2 deslocamento = new Vector2(0.5f, 0); // Para evitar ficar dentro do trigger
 
     [Header("Configuração da Porta")]
-    public string chaveNecessaria = "ChavePorta1";
+    public string chaveNecessaria = ""; // Se vazio, não precisa de chave
 
     [Header("Som")]
     public AudioClip somAbrir;
     public AudioClip somTrancada;
-    private AudioSource audioSource;
 
+    private AudioSource audioSource;
     private GameObject player;
     private bool playerPerto = false;
     private bool emUso = false;
@@ -36,7 +37,6 @@ public class PortaControler : MonoBehaviour
         player = GameObject.FindGameObjectWithTag("Player");
         anim = GetComponent<Animator>();
         audioSource = GetComponent<AudioSource>();
-
         if (player == null)
             Debug.LogError($"[{name}] Player com Tag 'Player' não encontrado.");
     }
@@ -53,18 +53,14 @@ public class PortaControler : MonoBehaviour
             if (!temChave)
             {
                 HUDMensagens.instance?.MostrarMensagemPor($"A porta está trancada — precisa da {chaveNecessaria}.", 2f);
-
-                // Toca som de porta trancada
                 if (somTrancada != null && audioSource != null)
                     audioSource.PlayOneShot(somTrancada);
-
                 return;
             }
 
             emUso = true;
             anim?.SetTrigger("Abrir");
 
-            // Toca som de abertura
             if (somAbrir != null && audioSource != null)
                 audioSource.PlayOneShot(somAbrir);
 
@@ -77,7 +73,7 @@ public class PortaControler : MonoBehaviour
             }
             else
             {
-                StartCoroutine(TeleportarComDelay(delayTeleport));
+                StartCoroutine(TeleportarComCooldown());
             }
         }
     }
@@ -87,33 +83,27 @@ public class PortaControler : MonoBehaviour
         yield return fader.FadeOutIn(fadeOutDur, fadeHold, fadeInDur, () =>
         {
             if (player != null && destino != null)
-                player.transform.position = destino.position;
+                player.transform.position = (Vector2)destino.position + deslocamento;
         });
+
+        yield return new WaitForSeconds(cooldown);
         emUso = false;
     }
 
-    private IEnumerator TeleportarComDelay(float delay)
+    private IEnumerator TeleportarComCooldown()
     {
-        if (delay > 0f) yield return new WaitForSeconds(delay);
         if (player != null && destino != null)
-            player.transform.position = destino.position;
+            player.transform.position = (Vector2)destino.position + deslocamento;
+
+        yield return new WaitForSeconds(cooldown);
         emUso = false;
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
         if (!collision.CompareTag("Player")) return;
-
         playerPerto = true;
-
-        bool temChave = string.IsNullOrWhiteSpace(chaveNecessaria) ||
-                        (InventarioPlayer.instance != null && InventarioPlayer.instance.TemChave(chaveNecessaria));
-
-        if (HUDMensagens.instance != null)
-        {
-            if (temChave) HUDMensagens.instance.MostrarMensagem("Pressione E para abrir");
-            else HUDMensagens.instance.MostrarMensagem("Pressione E para abrir");
-        }
+        HUDMensagens.instance?.MostrarMensagem("Pressione E para abrir");
     }
 
     private void OnTriggerExit2D(Collider2D collision)

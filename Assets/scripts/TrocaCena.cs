@@ -17,10 +17,17 @@ public class BotaoTrocaCenaComFade : MonoBehaviour
 
     private IEnumerator FazerFade()
     {
+        if (telaFade == null)
+        {
+            Debug.LogError("TelaFade não atribuída no Inspector!");
+            yield break;
+        }
+
         telaFade.gameObject.SetActive(true);
         Color cor = telaFade.color;
+        cor.a = 0f;
+        telaFade.color = cor;
 
-        // Fade Out (alpha 0 → 1)
         float tempo = 0f;
         while (tempo < duracaoFade)
         {
@@ -30,7 +37,6 @@ public class BotaoTrocaCenaComFade : MonoBehaviour
             yield return null;
         }
 
-        // Carrega a cena após o fade
         SceneManager.LoadScene(nomeCena);
     }
 }
